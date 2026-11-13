@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local-only build duplicates and snapshots (excluded from Git):
+    "deploy/**",
+    "backups/**",
+    ".screenshots/**",
   ]),
 ]);
 

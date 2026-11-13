@@ -1,9 +1,57 @@
-# Environment secrets - never upload
+# ==============================================================================
+# MY_RESUME — Project .gitignore
+# Repository contains SOURCE CODE ONLY.
+# Dependencies and build output are regenerated locally (see README).
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Dependencies — regenerated with: npm ci
+# ------------------------------------------------------------------------------
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ------------------------------------------------------------------------------
+# Next.js build output & caches — regenerated with: npm run build
+# Covers .next/cache, the Turbopack dev cache (contains large .sst files),
+# and the standalone output (contains nested node_modules + platform binaries).
+# ------------------------------------------------------------------------------
+.next/
+out/
+build/
+
+# ------------------------------------------------------------------------------
+# TypeScript incremental build info
+# ------------------------------------------------------------------------------
+*.tsbuildinfo
+
+# ------------------------------------------------------------------------------
+# Environment files & secrets — never commit live secrets
+# (templates with placeholder values are allowed)
+# ------------------------------------------------------------------------------
 .env
 .env.*
 !.env.example
+!.env.production.example
 
-# Database files - preserve locally, never upload
+# ------------------------------------------------------------------------------
+# Certificates & key material
+# ------------------------------------------------------------------------------
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+*.crt
+
+# ------------------------------------------------------------------------------
+# Database files & backups — private data, keep local only
+# ------------------------------------------------------------------------------
 *.db
 *.db-journal
 *.db.*
@@ -13,42 +61,43 @@
 *.db.backup
 *.db.bak
 
-# Git
-.git/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Editor temporary files
-.vscode/
-.idea/
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-
-# Coverage reports
-coverage/
-
-# Dependencies and build output — kept on disk, intentionally not pushed
-node_modules/
-.next/
-out/
-
-# Large local artifacts and snapshots — kept on disk, intentionally not pushed
+# ------------------------------------------------------------------------------
+# Local deployment duplicates & snapshots — kept on disk, not pushed
+# ------------------------------------------------------------------------------
 deploy/
 backups/
 .screenshots/
 
-# Local tooling artifacts
+# ------------------------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# Editor / OS files
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ------------------------------------------------------------------------------
+# Temporary & local tooling artifacts
+# ------------------------------------------------------------------------------
+*.tmp
+*.temp
+*.bak
+coverage/
 cookies.txt
 .gitignore.backup
-*.tsbuildinfo
+
+# ------------------------------------------------------------------------------
+# Git internals
+# ------------------------------------------------------------------------------
+.git/
