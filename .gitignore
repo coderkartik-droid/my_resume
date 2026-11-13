@@ -1,103 +1,63 @@
-# ==============================================================================
-# MY_RESUME — Project .gitignore
-# Repository contains SOURCE CODE ONLY.
-# Dependencies and build output are regenerated locally (see README).
-# ==============================================================================
-
-# ------------------------------------------------------------------------------
-# Dependencies — regenerated with: npm ci
-# ------------------------------------------------------------------------------
+# Dependencies
 node_modules/
-.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
-# ------------------------------------------------------------------------------
-# Next.js build output & caches — regenerated with: npm run build
-# Covers .next/cache, the Turbopack dev cache (contains large .sst files),
-# and the standalone output (contains nested node_modules + platform binaries).
-# ------------------------------------------------------------------------------
+# Next.js build output and cache
 .next/
 out/
-build/
 
-# ------------------------------------------------------------------------------
-# TypeScript incremental build info
-# ------------------------------------------------------------------------------
-*.tsbuildinfo
+# Deployment duplicate
+deploy/
 
-# ------------------------------------------------------------------------------
-# Environment files & secrets — never commit live secrets
-# (templates with placeholder values are allowed)
-# ------------------------------------------------------------------------------
+# Private backups
+backups/
+
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
-!.env.production.example
+!.env.*.example
 
-# ------------------------------------------------------------------------------
-# Certificates & key material
-# ------------------------------------------------------------------------------
-*.pem
-*.key
-*.p12
-*.pfx
-*.cert
-*.crt
-
-# ------------------------------------------------------------------------------
-# Database files & backups — private data, keep local only
-# ------------------------------------------------------------------------------
+# Database files
 *.db
 *.db-journal
-*.db.*
 *.sqlite
 *.sqlite3
-*.pre_files_backup
-*.db.backup
-*.db.bak
+*.sqlite-wal
+*.sqlite-shm
 
-# ------------------------------------------------------------------------------
-# Local deployment duplicates & snapshots — kept on disk, not pushed
-# ------------------------------------------------------------------------------
-deploy/
-backups/
-.screenshots/
-
-# ------------------------------------------------------------------------------
 # Logs
-# ------------------------------------------------------------------------------
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 
-# ------------------------------------------------------------------------------
-# Editor / OS files
-# ------------------------------------------------------------------------------
-.DS_Store
-Thumbs.db
-desktop.ini
-.vscode/
-.idea/
-
-# ------------------------------------------------------------------------------
-# Temporary & local tooling artifacts
-# ------------------------------------------------------------------------------
+# Temporary files
 *.tmp
 *.temp
 *.bak
-coverage/
-cookies.txt
-.gitignore.backup
+*.swp
+*.swo
 
-# ------------------------------------------------------------------------------
-# Git internals
-# ------------------------------------------------------------------------------
-.git/
+# Build and coverage
+coverage/
+*.tsbuildinfo
+
+# Local screenshots
+.screenshots/
+
+# Cookies and credentials
+cookies.txt
+cookies.json
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE settings
+.idea/
+.vscode/
+
+# Local Git backups
+_git_backups/
