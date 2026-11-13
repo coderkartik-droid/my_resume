@@ -1,0 +1,16 @@
+# ==============================================================================
+# SECURITY RULES FOR HOSTINGRAJA (Apache / LiteSpeed / cPanel)
+# ==============================================================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Block direct web access to database files, configuration, env files, and source definitions
+<FilesMatch "(dev\.db|\.sqlite|\.sqlite3|\.env|\.env\..*|\.lock|schema\.prisma|package\.json|tsconfig\.json)$">
+    Require all denied
+</FilesMatch>
+
+# Block access to hidden files and directories
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

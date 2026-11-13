@@ -1,0 +1,471 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. ADMIN & AUTHENTICATION MODULE
+// ==========================================
+
+model AdminUser {
+  id                 String               @id @default(cuid())
+  username           String               @unique
+  password           String               // hashed bcrypt
+  mustChangePassword Boolean              @default(true)
+  role               String               @default("SUPERADMIN") // SUPERADMIN, ADMIN, EDITOR
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  sessions           AdminSession[]
+  loginHistory       LoginHistory[]
+  auditLogs          AuditLog[]
+  passwordResets     PasswordResetToken[]
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  ip        String?
+  userAgent String?
+  expiresAt DateTime
+  revoked   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@index([expiresAt])
+}
+
+model LoginHistory {
+  id            String     @id @default(cuid())
+  userId        String?
+  user          AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  username      String
+  ip            String?
+  userAgent     String?
+  success       Boolean
+  failureReason String?
+  createdAt     DateTime   @default(now())
+
+  @@index([userId])
+  @@index([ip])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id         String     @id @default(cuid())
+  userId     String?
+  user       AdminUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String     // CREATE, UPDATE, DELETE, CONFIG_CHANGE, LOGIN, LOGOUT, DOWNLOAD
+  resource   String     // Project, Skill, Experience, ThemeConfig, SiteVisualConfig, MediaAsset, etc.
+  resourceId String?
+  details    String?    // JSON string summary of changes
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime   @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([createdAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  used      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+// ==========================================
+// 2. PORTFOLIO MANAGEMENT MODULE
+// ==========================================
+
+model ProjectCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  projects    Project[]
+
+  @@index([order])
+}
+
+model Project {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String           @unique
+  order            Int              @default(0)
+  displayNumber    String           @default("01")
+  category         String           @default("Web Development")
+  categoryId       String?
+  categoryRel      ProjectCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  shortDesc        String
+  fullDesc         String?
+  objectives       String?
+  problem          String?
+  solution         String?
+  keyFeatures      String?          // JSON string array or markdown
+  challenges       String?
+  techStack        String           // comma separated or JSON string
+  thumbnailUrl     String?
+  screenshots      String?          // JSON string array
+  liveUrl          String?
+  githubUrl        String?
+  documentationUrl String?
+  videoDemoUrl     String?
+  status           String           @default("Completed")
+  featured         Boolean          @default(false)
+  published        Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  files            ProjectFile[]
+
+  @@index([category])
+  @@index([categoryId])
+  @@index([featured, published])
+  @@index([order])
+}
+
+model ProjectFile {
+  id                String        @id @default(cuid())
+  projectId         String
+  project           Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fileName          String        // Display name, e.g. AuraOS-Installer-x64.exe
+  originalName      String        // Uploaded name
+  fileType          String        // APK, EXE, MSI, ZIP, RAR, PDF, JAR, AAB, DEB, APPIMAGE, OTHER
+  mimeType          String
+  fileSize          Int           // in bytes
+  fileSizeFormatted String        // e.g. "45.2 MB"
+  fileDescription   String?       // e.g. "Windows 64-bit installer package"
+  storagePath       String        // Internal server storage path
+  downloadUrl       String        // Authorized download link: /api/downloads/[id]
+  buttonText        String        @default("Download")
+  version           String?       @default("v1.0.0")
+  visible           Boolean       @default(true)
+  order             Int           @default(0)
+  downloadCount     Int           @default(0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  logs              DownloadLog[]
+
+  @@index([projectId])
+  @@index([fileType])
+  @@index([visible])
+  @@index([order])
+}
+
+model DownloadLog {
+  id        String      @id @default(cuid())
+  fileId    String
+  file      ProjectFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  ip        String?
+  userAgent String?
+  createdAt DateTime    @default(now())
+
+  @@index([fileId])
+  @@index([createdAt])
+}
+
+model SkillCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  skills      Skill[]
+
+  @@index([order])
+}
+
+model Skill {
+  id          String         @id @default(cuid())
+  name        String
+  category    String         // Frontend, Backend, Programming Languages, Database, UI/UX, Tools & Technologies, Other
+  categoryId  String?
+  categoryRel SkillCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  level       String?        // e.g., "Advanced", "Expert", "Proficient"
+  icon        String?        // icon name
+  order       Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([category])
+  @@index([categoryId])
+  @@index([order])
+}
+
+model Experience {
+  id           String   @id @default(cuid())
+  type         String   @default("work") // "work" or "education" or "achievement"
+  role         String
+  organization String
+  location     String?
+  period       String   // e.g. "2023 - Present"
+  description  String
+  skills       String?  // comma separated
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+  @@index([order])
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String?
+  features    String?  // JSON string array
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([read])
+  @@index([createdAt])
+}
+
+model Profile {
+  id           String   @id @default("profile_default")
+  name         String   @default("Kartik")
+  tagline      String   @default("Creative Developer | Web Developer | UI/UX Enthusiast")
+  bio          String   @default("I build digital experiences that combine creativity, technology and innovation.")
+  aboutStory   String?
+  avatarUrl    String?
+  resumeUrl    String?
+  email        String   @default("kartik@example.com")
+  phone        String?
+  location     String   @default("India")
+  githubUrl    String?  @default("https://github.com")
+  linkedinUrl  String?  @default("https://linkedin.com")
+  twitterUrl   String?  @default("https://twitter.com")
+  websiteTitle String   @default("Kartik | Creative Developer & 3D Interactive Portfolio")
+  footerText   String   @default("Crafted with passion, precision & cutting-edge WebGL technology.")
+  updatedAt    DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  role      String
+  company   String
+  avatarUrl String?
+  quote     String
+  rating    Int      @default(5)
+  featured  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([featured, order])
+}
+
+model Certification {
+  id            String   @id @default(cuid())
+  title         String
+  issuer        String
+  issueDate     String
+  credentialUrl String?
+  badgeUrl      String?
+  skills        String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([order])
+}
+
+// ==========================================
+// 3. WEBSITE CONFIGURATION MODULE
+// ==========================================
+
+model ThemeConfig {
+  id                String   @id @default("active_theme_config")
+  activeThemeId     String   @default("midnight-dark")
+  draftThemeId      String?
+  previousThemeId   String?
+  customOverrides   String?  // JSON string of user customization (colors, fonts, radius, shadows, etc.)
+  animationSettings String?  // JSON string of animation controls
+  updatedAt         DateTime @updatedAt
+}
+
+model ThemeHistory {
+  id              String   @id @default(cuid())
+  themeId         String
+  customOverrides String?  // Snapshot of customOverrides at that time
+  appliedBy       String?  // User or "system"
+  createdAt       DateTime @default(now())
+
+  @@index([themeId])
+  @@index([createdAt])
+}
+
+model SiteVisualConfig {
+  id              String   @id @default("active_visual_config")
+  heroConfig      String?  // JSON string
+  aboutConfig     String?  // JSON string
+  threeDConfig    String?  // JSON string
+  sectionsConfig  String?  // JSON string
+  contactConfig   String?  // JSON string
+  footerConfig    String?  // JSON string
+  draftConfig     String?  // JSON string
+  publishedConfig String?  // JSON string
+  revisions       String?  // JSON string array of previous snapshots
+  updatedAt       DateTime @updatedAt
+}
+
+model VisualConfigRevision {
+  id        String   @id @default(cuid())
+  snapshot  String   // JSON string of full configuration
+  appliedBy String?
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+/// Background Theme Studio — the animated canvas layer behind the public site.
+/// Singleton row (fixed id) so the selection survives refreshes, restarts and
+/// new visitor sessions.
+model BackgroundThemeConfig {
+  id               String   @id @default("active_background_config")
+  activeThemeId    String   @default("matrix-hacker")
+  previousThemeId  String?
+  animationEnabled Boolean  @default(true)
+  animationSpeed   String   @default("normal") // slow | normal | fast
+  brightness       Float    @default(1.0) // 0.5 – 1.5
+  particleDensity  Float    @default(1.0) // 0.5 – 2.0
+  parallaxEnabled  Boolean  @default(true)
+  themeSettings    String? // JSON string of per-theme configuration
+  lastAppliedBy    String?
+  updatedAt        DateTime @updatedAt
+}
+
+// ==========================================
+// 4. MUSIC MANAGEMENT MODULE
+// ==========================================
+
+model Playlist {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model MusicTrack {
+  id          String   @id @default(cuid())
+  title       String
+  artist      String   @default("Ambient Soundscape")
+  album       String?  @default("Portfolio Ambience")
+  coverUrl    String?
+  audioUrl    String
+  storagePath String?
+  fileName    String
+  mimeType    String
+  fileSize    Int
+  duration    Float?   @default(0)
+  order       Int      @default(0)
+  enabled     Boolean  @default(true)
+  isDefault   Boolean  @default(false)
+  playlist    String   @default("Default")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled, order])
+  @@index([playlist])
+}
+
+model MusicConfig {
+  id               String   @id @default("active_music_config")
+  enabled          Boolean  @default(true)
+  showTopbarToggle Boolean  @default(true)
+  defaultTrackId   String?
+  defaultVolume    Float    @default(0.35)
+  autoplayAttempt  Boolean  @default(false)
+  loop             Boolean  @default(true)
+  shuffle          Boolean  @default(false)
+  playbackMode     String   @default("playlist") // "playlist", "single", "shuffle"
+  activePlaylist   String   @default("all")      // "all" or playlist name
+  buttonStyle      String   @default("equalizer") // "equalizer", "compact", "pill", "vinyl"
+  buttonPosition   String   @default("topbar-right") // "topbar-right", "topbar-left", "floating-bottom-right"
+  maxUploadSizeMb  Int      @default(50)
+  updatedAt        DateTime @updatedAt
+}
+
+// ==========================================
+// 5. LEGAL & POLICY CMS MODULE
+// ==========================================
+
+model PrivacyPolicy {
+  id               String    @id @default("privacy_policy_document")
+  title            String    @default("Privacy Policy")
+  slug             String    @unique @default("privacy-policy")
+  summary          String?
+  draftContent     String? // Sanitized rich-text HTML (unpublished working copy)
+  publishedContent String? // Sanitized rich-text HTML (live public copy)
+  isPublished      Boolean   @default(false)
+  version          Int       @default(1)
+  revisions        String? // JSON string array of previous published snapshots
+  lastEditedBy     String?
+  publishedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+// ==========================================
+// 6. MEDIA ASSET MANAGEMENT MODULE
+// ==========================================
+
+model MediaAsset {
+  id                String   @id @default(cuid())
+  fileName          String   // Storage filename
+  originalName      String   // Original uploaded filename
+  mimeType          String
+  fileSize          Int      // in bytes
+  fileSizeFormatted String   // e.g. "2.4 MB"
+  url               String   // Public URL: /uploads/...
+  storagePath       String   // Server absolute/relative path
+  category          String   @default("general") // avatar, project_thumbnail, project_screenshot, music_cover, document, general
+  visible           Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([category])
+  @@index([mimeType])
+  @@index([visible])
+  @@index([createdAt])
+}

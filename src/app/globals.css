@@ -1,0 +1,570 @@
+@import "tailwindcss";
+
+:root {
+  /* Silicon Valley Elite Design System — Midnight Navy + Royal Indigo + Electric Blue + Soft Violet */
+  --theme-bg: #080D1B;
+  --theme-bg-secondary: #0E1528;
+  --theme-card: rgba(14, 21, 40, 0.72);
+  --theme-card-hover: rgba(20, 30, 56, 0.88);
+  --theme-fg: #F8FAFC;
+  --theme-fg-muted: #94A3B8;
+  --theme-primary: #5145E5;
+  --theme-primary-gradient: linear-gradient(135deg, #5145E5 0%, #38BDF8 50%, #A78BFA 100%);
+  --theme-secondary: #38BDF8;
+  --theme-accent: #38BDF8;
+  --theme-highlight: #A78BFA;
+  --theme-border: rgba(255, 255, 255, 0.08);
+  --theme-border-glow: rgba(56, 189, 248, 0.45);
+  --theme-glow: rgba(81, 69, 229, 0.35);
+  --theme-radius: 1.25rem;
+  --theme-border-width: 1px;
+  --theme-backdrop-blur: 24px;
+  --theme-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --theme-btn-radius: 0.875rem;
+  --theme-font-heading: var(--font-heading), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --theme-font-body: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --theme-font-accent: var(--font-mono), 'Geist Mono', monospace;
+
+  --background: var(--theme-bg);
+  --secondary: var(--theme-bg-secondary);
+  --foreground: var(--theme-fg);
+  --muted: var(--theme-fg-muted);
+}
+
+@theme inline {
+  --color-background: var(--theme-bg);
+  --color-secondary: var(--theme-bg-secondary);
+  --color-foreground: var(--theme-fg);
+  --color-muted: var(--theme-fg-muted);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--theme-bg);
+  color: var(--theme-fg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-fg);
+  overflow-x: hidden;
+  font-family: var(--theme-font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  selection-background-color: var(--theme-primary);
+  selection-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--theme-font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* Premium Precision Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080D1B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  border: 2px solid #080D1B;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-secondary, #38BDF8);
+}
+
+/* ==========================================================================
+   GLASSMORPHISM & LUXURY CARDS SYSTEM
+   ========================================================================== */
+
+.theme-card {
+  background: var(--theme-card);
+  border: var(--theme-border-width) solid var(--theme-border);
+  border-radius: var(--theme-radius);
+  backdrop-filter: blur(var(--theme-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--theme-backdrop-blur));
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.theme-card-hover:hover {
+  background: var(--theme-card-hover);
+  border-color: var(--theme-border-glow);
+  box-shadow: 0 24px 50px -10px var(--theme-glow), inset 0 1px 2px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-panel {
+  background: rgba(14, 21, 40, 0.65);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-input {
+  background: rgba(11, 16, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #F8FAFC;
+  transition: all 0.25s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--theme-accent, #38BDF8);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: rgba(14, 21, 40, 0.9);
+}
+
+/* ==========================================================================
+   NEUMORPHISM CONTROLS (TACTILE TOUCHPOINTS)
+   ========================================================================== */
+
+.neu-control {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4), -2px -2px 6px rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.neu-control:active, .neu-control.active {
+  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.6), inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* ==========================================================================
+   BADGES & BUTTONS
+   ========================================================================== */
+
+.theme-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--theme-primary) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--theme-accent, var(--theme-primary)) 40%, transparent);
+  color: var(--theme-accent, #38BDF8);
+  font-size: 0.72rem;
+  font-family: var(--theme-font-accent), monospace;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.theme-btn-primary {
+  background: var(--theme-primary-gradient);
+  color: #FFFFFF;
+  border-radius: var(--theme-btn-radius);
+  box-shadow: 0 12px 28px -6px var(--theme-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.6s ease;
+}
+
+.theme-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -4px var(--theme-glow), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  filter: brightness(1.08);
+}
+
+.theme-btn-primary:hover::before {
+  left: 100%;
+}
+
+.theme-btn-secondary {
+  background: rgba(14, 21, 40, 0.75);
+  color: var(--theme-fg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--theme-btn-radius);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.theme-btn-secondary:hover {
+  background: rgba(20, 30, 56, 0.9);
+  border-color: var(--theme-border-glow);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -5px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ==========================================================================
+   GRADIENTS & TEXTURE SYSTEM
+   ========================================================================== */
+
+.theme-gradient-text {
+  background: var(--theme-primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-subtle {
+  background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan {
+  background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Background Grids & Animations */
+.theme-bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+}
+
+.theme-bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+/* ==========================================================================
+   ADVANCED ANIMATIONS
+   ========================================================================== */
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.06);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+
+@keyframes beamSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-beam-sweep {
+  animation: beamSweep 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Equalizer Bars for Background Music System */
+@keyframes eqBounce1 {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+@keyframes eqBounce2 {
+  0%, 100% { height: 14px; }
+  50% { height: 6px; }
+}
+@keyframes eqBounce3 {
+  0%, 100% { height: 6px; }
+  50% { height: 18px; }
+}
+@keyframes eqBounce4 {
+  0%, 100% { height: 12px; }
+  50% { height: 4px; }
+}
+
+.animate-eq-1 { animation: eqBounce1 0.75s ease-in-out infinite; }
+.animate-eq-2 { animation: eqBounce2 0.55s ease-in-out infinite; }
+.animate-eq-3 { animation: eqBounce3 0.85s ease-in-out infinite; }
+.animate-eq-4 { animation: eqBounce4 0.65s ease-in-out infinite; }
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+/* ==========================================================================
+   LEGAL / RICH-TEXT CONTENT (Privacy Policy CMS)
+   Scoped typography for admin-authored, sanitized rich text. Attributes are
+   stripped on save, so styling is applied purely via these descendant rules.
+   ========================================================================== */
+
+.policy-content {
+  color: var(--theme-fg);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.policy-content > * + * {
+  margin-top: 1.05rem;
+}
+
+.policy-content h1,
+.policy-content h2,
+.policy-content h3,
+.policy-content h4,
+.policy-content h5,
+.policy-content h6 {
+  font-family: var(--theme-font-heading), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.policy-content h2 {
+  font-size: 1.5rem;
+  margin-top: 2.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.policy-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1.75rem;
+  color: var(--theme-accent, #38BDF8);
+}
+
+.policy-content p,
+.policy-content li {
+  color: rgba(203, 213, 225, 0.92);
+}
+
+.policy-content a {
+  color: var(--theme-accent, #38BDF8);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.policy-content a:hover {
+  color: #FFFFFF;
+}
+
+.policy-content strong {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.policy-content ul,
+.policy-content ol {
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.policy-content ul {
+  list-style: disc;
+}
+
+.policy-content ol {
+  list-style: decimal;
+}
+
+.policy-content li::marker {
+  color: var(--theme-accent, #38BDF8);
+}
+
+.policy-content blockquote {
+  border-left: 3px solid var(--theme-accent, #38BDF8);
+  padding: 0.25rem 0 0.25rem 1.15rem;
+  color: rgba(226, 232, 240, 0.9);
+  font-style: italic;
+}
+
+.policy-content code {
+  font-family: var(--theme-font-accent), monospace;
+  font-size: 0.85em;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.policy-content pre {
+  background: rgba(11, 16, 32, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.82rem;
+}
+
+.policy-content hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 2rem 0;
+}
+
+.policy-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.policy-content th,
+.policy-content td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+
+.policy-content th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+}
+
+/* Light-surface variant for the admin rich-text editor (unthemed admin shell) */
+.policy-content--admin {
+  color: #1E293B;
+}
+
+.policy-content--admin[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #94A3B8;
+}
+
+.policy-content--admin h1,
+.policy-content--admin h2,
+.policy-content--admin h3,
+.policy-content--admin h4,
+.policy-content--admin h5,
+.policy-content--admin h6 {
+  color: #0F172A;
+}
+
+.policy-content--admin h2 {
+  border-bottom-color: #E2E8F0;
+}
+
+.policy-content--admin h3 {
+  color: #4F46E5;
+}
+
+.policy-content--admin p,
+.policy-content--admin li {
+  color: #334155;
+}
+
+.policy-content--admin a,
+.policy-content--admin a:hover {
+  color: #4F46E5;
+}
+
+.policy-content--admin strong {
+  color: #0F172A;
+}
+
+.policy-content--admin li::marker {
+  color: #4F46E5;
+}
+
+.policy-content--admin blockquote {
+  border-left-color: #4F46E5;
+  color: #475569;
+}
+
+.policy-content--admin code {
+  background: #F1F5F9;
+  border-color: #E2E8F0;
+  color: #4F46E5;
+}
+
+.policy-content--admin pre {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  color: #334155;
+}
+
+.policy-content--admin hr {
+  background: #E2E8F0;
+}
+
+.policy-content--admin th,
+.policy-content--admin td {
+  border-color: #E2E8F0;
+}
+
+.policy-content--admin th {
+  background: #F8FAFC;
+  color: #0F172A;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
